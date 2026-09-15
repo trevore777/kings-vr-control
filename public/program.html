@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#071824">
+  <meta name="description" content="Four-lesson Year 7 and 8 virtual reality investigation">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/program.css">
+  <title>King’s VR Investigation</title>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/learn" aria-label="VR Investigation home"><span>K</span><div><strong>VR Investigation</strong><small>Year 7–8 · four lessons</small></div></a>
+    <div class="save-state" id="save-state" role="status">Saved on this iPad</div>
+  </header>
+
+  <main>
+    <section class="welcome" id="welcome">
+      <div>
+        <p class="eyebrow">KING’S CHRISTIAN COLLEGE</p>
+        <h1>Explore, test and design in virtual reality.</h1>
+        <p class="lede">Use the headset safely, investigate how VR creates a sense of presence, collect evidence, then design an experience of your own.</p>
+      </div>
+      <div class="student-card">
+        <label>Your name <input id="student-name" data-save="studentName" autocomplete="name" placeholder="First and last name"></label>
+        <label>Class <input id="student-class" data-save="studentClass" placeholder="e.g. 8DTG"></label>
+      </div>
+    </section>
+
+    <nav class="lesson-tabs" aria-label="Lessons">
+      <button class="tab active" data-lesson="1"><span>01</span><b>Enter VR</b><small>Safety + first ride</small></button>
+      <button class="tab" data-lesson="2"><span>02</span><b>Presence</b><small>Motion + design</small></button>
+      <button class="tab" data-lesson="3"><span>03</span><b>Beat Saber</b><small>Data + improvement</small></button>
+      <button class="tab" data-lesson="4"><span>04</span><b>Design</b><small>Create + evaluate</small></button>
+    </nav>
+
+    <section id="lesson-shell" class="lesson-shell" aria-live="polite"></section>
+  </main>
+
+  <template id="lesson-1">
+    <article class="lesson" data-key="l1">
+      <div class="lesson-title"><div><p class="eyebrow">LESSON 1 · ENTER VR</p><h2>Safety, senses and your first roller-coaster ride</h2></div><span class="time">40 min</span></div>
+      <div class="teacher-strip"><strong>Lesson flow</strong><span>5 min briefing</span><span>20 min rotations</span><span>10 min worksheet</span><span>5 min exit check</span></div>
+      <div class="two-col">
+        <section class="panel"><h3>Before the headset</h3><ol class="steps"><li>Clear your space and listen for the stop signal.</li><li>Tighten the strap so the display is secure, not painful.</li><li>Keep both controllers attached with wrist straps.</li><li>Stop immediately if you feel dizzy, sick, anxious or unsteady.</li><li>Wait for the teacher before moving outside the boundary.</li></ol><div class="check"><label><input type="checkbox" data-save="l1Safety"> I understand and will follow the VR safety rules.</label></div></section>
+        <section class="panel accent"><h3>Rotation challenge</h3><p><b>Headset station:</b> complete a short seated roller-coaster experience.</p><p><b>iPad station:</b> predict which senses VR will use and complete the safety sorter below.</p><p><b>Observer:</b> watch for one sign that the player feels present in the virtual space.</p><button class="timer-button" data-timer="240">Start 4-minute rotation</button><output class="timer" aria-live="polite">04:00</output></section>
+      </div>
+      <section class="panel worksheet"><div class="panel-head"><div><p class="eyebrow">WORKSHEET 1</p><h3>Predict, observe, explain</h3></div><span>Autosaves</span></div>
+        <label>1. Before entering VR, what do you predict will make the roller coaster feel real?<textarea data-save="l1q1" placeholder="I predict… because…"></textarea></label>
+        <fieldset><legend>2. Safety sorter — tap every safe action.</legend><div class="choice-grid" data-multi="l1safe"><button data-value="Use wrist straps">Use wrist straps</button><button data-value="Run while wearing the headset">Run while wearing the headset</button><button data-value="Stop if you feel unwell">Stop if you feel unwell</button><button data-value="Move the boundary without asking">Move the boundary without asking</button><button data-value="Check the play space is clear">Check the play space is clear</button><button data-value="Follow the teacher’s stop signal">Follow the teacher’s stop signal</button></div></fieldset>
+        <label>3. What did your eyes tell your brain, and what did your body tell your brain?<textarea data-save="l1q3"></textarea></label>
+        <label>4. Give one example that showed you or another player felt “present” in VR.<textarea data-save="l1q4"></textarea></label>
+      </section>
+      <label class="complete"><input type="checkbox" data-save="l1Complete"> I have completed Lesson 1 and shown my work to my teacher.</label>
+    </article>
+  </template>
+
+  <template id="lesson-2">
+    <article class="lesson" data-key="l2">
+      <div class="lesson-title"><div><p class="eyebrow">LESSON 2 · PRESENCE</p><h2>How designers create motion without moving you</h2></div><span class="time">40 min</span></div>
+      <div class="teacher-strip"><strong>Lesson flow</strong><span>5 min recall</span><span>20 min rotations</span><span>10 min investigation</span><span>5 min share</span></div>
+      <div class="two-col"><section class="panel"><h3>Investigation focus</h3><p>VR can show rapid movement while your body remains almost still. Look for visual, sound and timing choices that create speed, height and direction.</p><ul class="chips"><li>field of view</li><li>scale</li><li>sound</li><li>speed</li><li>head tracking</li></ul></section><section class="panel accent"><h3>Rotation challenge</h3><p><b>Headset:</b> ride and identify two design choices.</p><p><b>Observer:</b> record visible reactions without touching the player.</p><p><b>iPad:</b> complete the motion prediction game and worksheet.</p><button class="timer-button" data-timer="240">Start 4-minute rotation</button><output class="timer">04:00</output></section></div>
+      <section class="panel mini-game"><p class="eyebrow">IPAD GAME</p><h3>Motion prediction</h3><p id="motion-prompt">A track drops steeply while wind sound becomes louder. What feeling is the designer trying to create?</p><div class="choice-grid single" data-quiz="motion"><button data-correct="true">Falling faster</button><button>Standing still</button><button>Moving backwards slowly</button></div><p class="feedback" id="motion-feedback" role="status"></p></section>
+      <section class="panel worksheet"><div class="panel-head"><div><p class="eyebrow">WORKSHEET 2</p><h3>Analyse the experience</h3></div><span>Autosaves</span></div>
+        <label>1. Identify two features that created a feeling of movement.<textarea data-save="l2q1" placeholder="Feature 1… Feature 2…"></textarea></label>
+        <label>2. Explain how one feature affected the user.<textarea data-save="l2q2" placeholder="The designer used… This caused…"></textarea></label>
+        <label>3. Rate the comfort of the experience.<input type="range" min="1" max="5" value="3" data-save="l2comfort"><span class="range-labels"><span>1 · uncomfortable</span><span>5 · comfortable</span></span></label>
+        <label>4. Suggest one design change that could make the experience safer or more comfortable.<textarea data-save="l2q4"></textarea></label>
+      </section><label class="complete"><input type="checkbox" data-save="l2Complete"> I have completed Lesson 2 and shown my work to my teacher.</label>
+    </article>
+  </template>
+
+  <template id="lesson-3">
+    <article class="lesson" data-key="l3">
+      <div class="lesson-title"><div><p class="eyebrow">LESSON 3 · BEAT SABER</p><h2>Rhythm, reaction and improvement data</h2></div><span class="time">40 min</span></div>
+      <div class="teacher-strip"><strong>Lesson flow</strong><span>5 min technique</span><span>22 min rotations</span><span>8 min data</span><span>5 min reflection</span></div>
+      <div class="two-col"><section class="panel"><h3>Safe play</h3><ul class="steps"><li>Use the teacher-selected song and difficulty.</li><li>Keep both feet in the marked play area.</li><li>Use controlled arm movements and wrist straps.</li><li>Stop on the teacher’s signal or if uncomfortable.</li></ul></section><section class="panel accent"><h3>Rotation challenge</h3><p><b>Player:</b> complete two short attempts.</p><p><b>Data coach:</b> record scores and one improvement strategy.</p><p><b>iPad:</b> test your reaction time, then calculate improvement.</p><button class="timer-button" data-timer="270">Start 4½-minute rotation</button><output class="timer">04:30</output></section></div>
+      <section class="panel mini-game reaction"><p class="eyebrow">IPAD GAME</p><h3>Reaction test</h3><p>Tap start, wait for green, then tap as quickly as you can.</p><button id="reaction-button" class="reaction-button">Start reaction test</button><p id="reaction-result" class="feedback" role="status">Complete three attempts.</p></section>
+      <section class="panel worksheet"><div class="panel-head"><div><p class="eyebrow">WORKSHEET 3</p><h3>Use data to improve</h3></div><span>Autosaves</span></div>
+        <div class="score-row"><label>Beat Saber attempt 1<input type="number" min="0" inputmode="numeric" data-save="l3score1"></label><label>Beat Saber attempt 2<input type="number" min="0" inputmode="numeric" data-save="l3score2"></label><div class="calculation"><span>Change</span><strong id="score-change">—</strong></div></div>
+        <label>1. What strategy did you use before the second attempt?<textarea data-save="l3q1"></textarea></label>
+        <label>2. Use your score data to explain whether the strategy helped.<textarea data-save="l3q2" placeholder="My score changed by… This suggests…"></textarea></label>
+        <label>3. Identify one accessibility change that could help more people participate.<textarea data-save="l3q3"></textarea></label>
+      </section><label class="complete"><input type="checkbox" data-save="l3Complete"> I have completed Lesson 3 and shown my work to my teacher.</label>
+    </article>
+  </template>
+
+  <template id="lesson-4">
+    <article class="lesson" data-key="l4">
+      <div class="lesson-title"><div><p class="eyebrow">LESSON 4 · DESIGN</p><h2>Create an educational VR experience</h2></div><span class="time">40 min</span></div>
+      <div class="teacher-strip"><strong>Lesson flow</strong><span>5 min compare</span><span>20 min design</span><span>10 min peer test</span><span>5 min pitch</span></div>
+      <div class="two-col"><section class="panel"><h3>Design brief</h3><p>Design a small VR experience that teaches a Year 7 or 8 student something. Use what you learned from Roller Coaster and Beat Saber. Your design must be purposeful, safe and accessible.</p></section><section class="panel accent"><h3>Success criteria</h3><ul class="steps"><li>A clear learning purpose and user</li><li>Meaningful interaction, not just watching</li><li>At least two safety or comfort choices</li><li>An explanation of how success is measured</li></ul></section></div>
+      <section class="panel worksheet"><div class="panel-head"><div><p class="eyebrow">FINAL DESIGN</p><h3>Your VR concept</h3></div><span>Autosaves</span></div>
+        <div class="score-row"><label>Experience name<input data-save="l4name"></label><label>What will users learn?<input data-save="l4learning"></label></div>
+        <label>1. Describe what the user sees, hears and does.<textarea data-save="l4q1"></textarea></label>
+        <div class="storyboard"><label><span>Scene 1 · Enter</span><textarea data-save="l4scene1" placeholder="What happens first?"></textarea></label><label><span>Scene 2 · Interact</span><textarea data-save="l4scene2" placeholder="What does the user do?"></textarea></label><label><span>Scene 3 · Finish</span><textarea data-save="l4scene3" placeholder="How does the user succeed?"></textarea></label></div>
+        <label>2. Explain two safety, comfort or accessibility choices.<textarea data-save="l4q2"></textarea></label>
+        <label>3. Peer feedback — one strength and one suggested improvement.<textarea data-save="l4q3"></textarea></label>
+        <label>4. What did you change after the feedback, and why?<textarea data-save="l4q4"></textarea></label>
+      </section>
+      <div class="finish-row"><label class="complete"><input type="checkbox" data-save="l4Complete"> My four-lesson VR investigation is complete.</label><button id="print-work" class="print-button">Print or save my work</button></div>
+    </article>
+  </template>
+  <script src="/program.js"></script>
+</body>
+</html>

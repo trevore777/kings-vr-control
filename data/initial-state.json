@@ -6,6 +6,6 @@
     {"id":"VR-04","model":"Meta Quest 3S","battery":88,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null},
     {"id":"VR-05","model":"Meta Quest 3S","battery":84,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null}
   ],
-  "session":{"name":"Year 7/8 VR Investigation","active":false,"startedAt":null},
+  "session":{"name":"Year 7/8 VR Lesson 1 — Enter VR","active":false,"startedAt":null},
   "events":[]
 }

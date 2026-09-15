@@ -10,6 +10,19 @@ Teacher dashboard and device heartbeat API for a five-headset Meta Quest classro
 - Provides the teacher’s Meta casting hand-off.
 - Accepts authenticated heartbeat updates from a future Quest companion app.
 - Supports optional HTTP Basic authentication for the teacher dashboard.
+- Includes a public, iPad-friendly four-lesson Year 7–8 learning program at `/learn`.
+- Provides teacher run sheets, five-headset rotations, safety checks and autosaving worksheets.
+- Uses Roller Coaster and Beat Saber for the VR stations, with iPad activities while students wait.
+
+## Year 7–8 learning program
+
+The student program is deliberately separate from the authenticated fleet controls. Student work is
+saved in the browser storage on each iPad and can be printed or saved as a PDF from Lesson 4.
+
+1. Enter VR — safety, senses and a first seated roller-coaster experience.
+2. Presence — investigate how visual and sound design create perceived motion.
+3. Beat Saber — collect attempt scores, test reaction time and evaluate improvement.
+4. Design — propose, storyboard, peer-review and refine an educational VR experience.
 
 ## Run
 

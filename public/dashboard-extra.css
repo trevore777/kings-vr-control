@@ -1,0 +1,28 @@
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+  padding: 11px 16px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.program-callout {
+  margin-top: 18px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #347060;
+  border-radius: 18px;
+  background: linear-gradient(105deg, #0e302f, #102936);
+}
+
+.program-callout p { color: var(--muted); margin-bottom: 0; max-width: 760px; }
+
+@media (max-width: 620px) {
+  .student-link { display: none; }
+  .program-callout { align-items: flex-start; flex-direction: column; }
+}

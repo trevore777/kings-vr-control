@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#071824"><meta name="description" content="Teacher control dashboard for the King's VR headset fleet">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/dashboard-extra.css">
   <title>King’s VR Control</title>
 </head>
 <body>
   <header>
     <div class="brand"><span class="mark">K</span><div><strong>King’s VR Control</strong><small>Five-headset classroom fleet</small></div></div>
-    <div class="header-actions"><span id="clock"></span><button id="cast" class="secondary">Open classroom casting</button></div>
+    <div class="header-actions"><span id="clock"></span><a class="button-link secondary student-link" href="/learn" target="_blank">Open student program</a><button id="cast" class="secondary">Open classroom casting</button></div>
   </header>
   <main>
     <section class="session-panel">
@@ -21,6 +21,7 @@
     </div>
     <section><div class="section-heading"><div><span class="eyebrow">LIVE FLEET</span><h1>Select a headset to manage</h1></div><span class="refresh-note">Refreshes every 10 seconds</span></div><div id="devices" class="device-grid"></div></section>
     <section class="lower-grid"><article><span class="eyebrow">CLASSROOM DISPLAY</span><h2>Share one student’s view</h2><p>Choose the student’s headset, start casting inside Quest, then display the casting browser tab on the classroom screen.</p><ol><li>Select <b>Camera → Cast → Computer</b> in the headset.</li><li>Open Meta casting using the button above.</li><li>Share the browser window to the classroom display.</li></ol></article><article><span class="eyebrow">RECENT ACTIVITY</span><h2>Session log</h2><div id="events" class="events"><p class="muted">No activity recorded yet.</p></div></article></section>
+    <section class="program-callout"><div><span class="eyebrow">YEAR 7–8 PROGRAM</span><h2>Four-lesson VR investigation</h2><p>Teacher run sheets, five-headset rotations, iPad activities and autosaving student worksheets for Roller Coaster and Beat Saber.</p></div><a class="button-link primary" href="/learn" target="_blank">Launch learning program</a></section>
   </main>
   <dialog id="device-dialog"><form method="dialog"><button class="close" value="cancel" aria-label="Close">×</button><span class="eyebrow" id="dialog-model"></span><h2 id="dialog-title"></h2><label>Student or group<input id="student" maxlength="60" placeholder="e.g. Ava and Noah"></label><label>Learning activity<input id="activity" maxlength="100" placeholder="e.g. VR safety investigation"></label><label>Status<select id="status"><option value="ready">Ready</option><option value="active">In use</option><option value="attention">Needs attention</option><option value="charging">Charging</option></select></label><button id="save-device" class="primary" value="default">Save headset</button></form></dialog>
   <script src="/app.js"></script>
