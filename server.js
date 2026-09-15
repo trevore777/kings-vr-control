@@ -4,6 +4,13 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 const root = __dirname;
+const envPath = path.join(root, '.env');
+if (fs.existsSync(envPath)) {
+  for (const line of fs.readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+    const match = line.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+    if (match && process.env[match[1]] === undefined) process.env[match[1]] = match[2];
+  }
+}
 const port = Number(process.env.PORT || 3200);
 const statePath = path.join(root, 'data', 'state.json');
 const initialPath = path.join(root, 'data', 'initial-state.json');
