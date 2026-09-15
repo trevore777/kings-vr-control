@@ -46,7 +46,7 @@ function teacherAllowed(req) {
 
 function requireTeacher(req, res) {
   if (teacherAllowed(req)) return true;
-  res.writeHead(401, {'www-authenticate':'Basic realm="King’s VR Control"'});
+  res.writeHead(401, {'www-authenticate':'Basic realm="Kings VR Control"'});
   res.end('Authentication required');
   return false;
 }
