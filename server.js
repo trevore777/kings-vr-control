@@ -1,0 +1,112 @@
+const http = require('node:http');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+
+const root = __dirname;
+const port = Number(process.env.PORT || 3200);
+const statePath = path.join(root, 'data', 'state.json');
+const initialPath = path.join(root, 'data', 'initial-state.json');
+
+function loadState() {
+  const source = fs.existsSync(statePath) ? statePath : initialPath;
+  return JSON.parse(fs.readFileSync(source, 'utf8'));
+}
+
+function saveState(state) {
+  fs.writeFileSync(`${statePath}.tmp`, JSON.stringify(state, null, 2));
+  fs.renameSync(`${statePath}.tmp`, statePath);
+}
+
+function send(res, status, payload, type = 'application/json; charset=utf-8') {
+  res.writeHead(status, {'content-type': type, 'cache-control': 'no-store'});
+  res.end(type.startsWith('application/json') ? JSON.stringify(payload) : payload);
+}
+
+function safeEqual(a = '', b = '') {
+  const one = Buffer.from(a); const two = Buffer.from(b);
+  return one.length === two.length && crypto.timingSafeEqual(one, two);
+}
+
+function teacherAllowed(req) {
+  if (!process.env.APP_USERNAME || !process.env.APP_PASSWORD) return true;
+  const token = (req.headers.authorization || '').replace(/^Basic /, '');
+  let value = '';
+  try { value = Buffer.from(token, 'base64').toString(); } catch {}
+  const split = value.indexOf(':');
+  return split > -1 && safeEqual(value.slice(0, split), process.env.APP_USERNAME) && safeEqual(value.slice(split + 1), process.env.APP_PASSWORD);
+}
+
+function requireTeacher(req, res) {
+  if (teacherAllowed(req)) return true;
+  res.writeHead(401, {'www-authenticate':'Basic realm="King’s VR Control"'});
+  res.end('Authentication required');
+  return false;
+}
+
+async function body(req) {
+  let raw = '';
+  for await (const chunk of req) {
+    raw += chunk;
+    if (raw.length > 100000) throw new Error('Request too large');
+  }
+  return raw ? JSON.parse(raw) : {};
+}
+
+function addEvent(state, message) {
+  state.events.unshift({id: crypto.randomUUID(), message, at: new Date().toISOString()});
+  state.events = state.events.slice(0, 30);
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+  if (url.pathname === '/health') return send(res, 200, {ok:true});
+
+  if (url.pathname === '/api/device/heartbeat' && req.method === 'POST') {
+    if (!process.env.DEVICE_API_KEY || !safeEqual(req.headers['x-device-key'] || '', process.env.DEVICE_API_KEY)) return send(res, 401, {error:'Invalid device key'});
+    try {
+      const update = await body(req); const state = loadState();
+      const device = state.devices.find(item => item.id === update.id);
+      if (!device) return send(res, 404, {error:'Unknown device'});
+      for (const key of ['battery','activity','appVersion','status']) if (update[key] !== undefined) device[key] = update[key];
+      device.lastSeen = new Date().toISOString(); saveState(state);
+      return send(res, 200, {ok:true, device});
+    } catch (error) { return send(res, 400, {error:error.message}); }
+  }
+
+  if (url.pathname.startsWith('/api/') && !requireTeacher(req, res)) return;
+  if (url.pathname === '/api/state' && req.method === 'GET') return send(res, 200, loadState());
+
+  if (url.pathname.match(/^\/api\/devices\/VR-0[1-5]$/) && req.method === 'PATCH') {
+    try {
+      const update = await body(req); const state = loadState();
+      const id = url.pathname.split('/').pop(); const device = state.devices.find(item => item.id === id);
+      for (const key of ['student','activity','status','model']) if (update[key] !== undefined) device[key] = String(update[key]).slice(0, 100);
+      addEvent(state, `${id} updated${device.student ? ` for ${device.student}` : ''}`); saveState(state);
+      return send(res, 200, device);
+    } catch (error) { return send(res, 400, {error:error.message}); }
+  }
+
+  if (url.pathname === '/api/session' && req.method === 'PATCH') {
+    try {
+      const update = await body(req); const state = loadState();
+      if (update.name !== undefined) state.session.name = String(update.name).slice(0, 100);
+      if (update.active !== undefined) {
+        state.session.active = Boolean(update.active);
+        state.session.startedAt = state.session.active ? new Date().toISOString() : null;
+        addEvent(state, state.session.active ? `Session started: ${state.session.name}` : 'Session ended');
+      }
+      saveState(state); return send(res, 200, state.session);
+    } catch (error) { return send(res, 400, {error:error.message}); }
+  }
+
+  if (req.method !== 'GET') return send(res, 404, {error:'Not found'});
+  if (!requireTeacher(req, res)) return;
+  const requested = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
+  const file = path.join(root, 'public', requested);
+  if (!file.startsWith(path.join(root, 'public')) || !fs.existsSync(file)) return send(res, 404, 'Not found', 'text/plain');
+  const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml'};
+  return send(res, 200, fs.readFileSync(file), types[path.extname(file)] || 'application/octet-stream');
+});
+
+server.listen(port, () => console.log(`King’s VR Control listening on ${port}`));
