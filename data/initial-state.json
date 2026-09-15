@@ -1,0 +1,11 @@
+{
+  "devices": [
+    {"id":"VR-01","model":"Meta Quest 2","battery":82,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null},
+    {"id":"VR-02","model":"Meta Quest 2","battery":76,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null},
+    {"id":"VR-03","model":"Meta Quest 3","battery":91,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null},
+    {"id":"VR-04","model":"Meta Quest 3S","battery":88,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null},
+    {"id":"VR-05","model":"Meta Quest 3S","battery":84,"status":"ready","student":"","activity":"Ready for allocation","appVersion":"Not connected","lastSeen":null}
+  ],
+  "session":{"name":"Year 7/8 VR Investigation","active":false,"startedAt":null},
+  "events":[]
+}
