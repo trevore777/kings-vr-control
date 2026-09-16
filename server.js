@@ -157,4 +157,5 @@ const server = http.createServer(async (req, res) => {
   return send(res, 200, fs.readFileSync(file), types[path.extname(file)] || 'application/octet-stream');
 });
 
+loadState(); // Remove any legacy student fields before accepting hosted requests.
 server.listen(port, () => console.log(`King’s VR Control listening on ${port}`));
