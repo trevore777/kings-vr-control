@@ -1,28 +1,17 @@
 # King’s VR Control
 
-Teacher dashboard and device heartbeat API for a five-headset Meta Quest classroom fleet.
+Offline-first teacher dashboard for a five-headset Meta Quest classroom fleet. The MacBook installs APKs over USB; each Quest runs installed EDU apps standalone. The dashboard records allocations and installed app versions manually. It does not detect USB headsets or cast through USB.
 
 ## Current MVP
 
-- Tracks VR-01 through VR-05, models, battery, status and last contact.
+- Tracks VR-01 through VR-05, manually checked battery and readiness.
+- Records installed EDU apps and versions on each headset.
 - Allocates students/groups and learning activities.
 - Starts and ends a classroom VR session.
-- Provides the teacher’s Meta casting hand-off.
-- Accepts authenticated heartbeat updates from a future Quest companion app.
+- Provides an optional phone-hotspot casting hand-off.
+- Provides a Mac-side, explicit-serial ADB USB installation tool.
+- Retains a heartbeat endpoint for a future *networked* Quest companion app; it is not live offline telemetry.
 - Supports optional HTTP Basic authentication for the teacher dashboard.
-- Includes a public, iPad-friendly four-lesson Year 7–8 learning program at `/learn`.
-- Provides teacher run sheets, five-headset rotations, safety checks and autosaving worksheets.
-- Uses Roller Coaster and Beat Saber for the VR stations, with iPad activities while students wait.
-
-## Year 7–8 learning program
-
-The student program is deliberately separate from the authenticated fleet controls. Student work is
-saved in the browser storage on each iPad and can be printed or saved as a PDF from Lesson 4.
-
-1. Enter VR — safety, senses and a first seated roller-coaster experience.
-2. Presence — investigate how visual and sound design create perceived motion.
-3. Beat Saber — collect attempt scores, test reaction time and evaluate improvement.
-4. Design — propose, storyboard, peer-review and refine an educational VR experience.
 
 ## Run
 
@@ -32,7 +21,20 @@ Copy `.env.example` to `.env`, set secure credentials, export the values, then r
 npm start
 ```
 
-The default address is `http://localhost:3200` and `/health` provides an AWS health check.
+The default address is `http://localhost:3200` and `/health` provides an AWS health check. On the teacher MacBook, the Node app and `data/state.json` work without school Wi-Fi or internet; the AWS site does not. No npm dependencies are required. Local Mac and AWS records do not sync automatically. Avoid putting identifiable student details on AWS without school approval.
+
+## Home preparation and school operation
+
+With IT approval for Developer Mode, sideloading and taking school-owned devices home, download and vet approved APKs at home. Use SideQuest Advanced Installer, Meta Quest Developer Hub, or install Android platform-tools to use the bundled USB tool:
+
+```bash
+npm run usb -- list
+npm run usb -- install <ADB_SERIAL_FROM_LIST> /absolute/path/to/ApprovedEduApp.apk
+```
+
+Accept the USB debugging prompt in the headset. Always identify the intended serial and install one headset at a time; run the app once, then record app/version in the dashboard. Keep APKs in an approved folder, not in GitHub. The USB cable is for installation, not normal play or casting; Quest Link PC-VR is Windows-only.
+
+At school, run this dashboard locally on the MacBook, use the standalone preinstalled apps and allocate VR-01 to VR-05 without Wi-Fi. Back up `data/state.json` under school policy. Optional Meta casting requires the headset and MacBook on the same phone hotspot, the same Meta account in the casting browser, mobile data and a hotspot that permits connected devices to communicate. Test one headset first; casting is not guaranteed offline and should never be assumed to work over USB.
 
 ## Quest companion heartbeat
 
