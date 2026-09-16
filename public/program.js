@@ -6,6 +6,11 @@ let currentLesson = Number(localStorage.getItem('kings-vr-current') || 1);
 let timerId;
 
 try { saved = JSON.parse(localStorage.getItem(storageKey) || '{}'); } catch { saved = {}; }
+// Remove the identifiable field used by the original lesson version.
+if (saved.studentName !== undefined) {
+  delete saved.studentName;
+  localStorage.setItem(storageKey, JSON.stringify(saved));
+}
 
 function persist(message = 'Saved on this iPad') {
   localStorage.setItem(storageKey, JSON.stringify(saved));
@@ -21,6 +26,7 @@ function bindSavedFields(root = document) {
     if (field.type === 'checkbox') field.checked = Boolean(saved[key]);
     else if (saved[key] !== undefined) field.value = saved[key];
     field.addEventListener('input', () => {
+      if (key === 'studentNumber') field.value = field.value.replace(/\D/g, '').slice(0, 12);
       saved[key] = field.type === 'checkbox' ? field.checked : field.value;
       persist('Saving…');
       if (key === 'l3score1' || key === 'l3score2') updateScore();
