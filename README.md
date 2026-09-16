@@ -47,3 +47,8 @@ Send a POST request to `/api/device/heartbeat` with `X-Device-Key` and JSON such
 ## AWS deployment
 
 Designed for Node.js 20 behind Nginx and PM2. Persist the `data` directory and set `APP_USERNAME`, `APP_PASSWORD`, and `DEVICE_API_KEY` in the PM2 environment.
+
+
+## Year 7–8 learning program
+
+Open `/learn` for four lessons covering VR safety, presence and motion, Beat Saber improvement data, and educational VR design. Worksheet data remains in that browser and is not sent to AWS.
