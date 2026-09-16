@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#071824"><meta name="description" content="Teacher control dashboard for the King's VR headset fleet">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"><link rel="stylesheet" href="/dashboard-extra.css">
   <title>King’s VR Control</title>
   <style>dialog textarea{font:inherit;width:100%;border:1px solid #284653;border-radius:10px;background:#071824;color:#f3fbff;padding:12px;resize:vertical}</style>
 </head>
 <body>
   <header>
     <div class="brand"><span class="mark">K</span><div><strong>King’s VR Control</strong><small>Five-headset classroom fleet</small></div></div>
-    <div class="header-actions"><span id="clock"></span><button id="cast" class="secondary">Hotspot casting (optional)</button></div>
+    <div class="header-actions"><span id="clock"></span><a class="button-link secondary student-link" href="/learn" target="_blank">Open lessons</a><button id="cast" class="secondary">Hotspot casting (optional)</button></div>
   </header>
   <main>
     <section class="session-panel">
@@ -22,6 +22,7 @@
     </div>
     <section><div class="section-heading"><div><span class="eyebrow">HEADSET RECORDS</span><h1>Select a headset to manage</h1></div><span class="refresh-note">Manually recorded; not a live USB feed</span></div><div id="devices" class="device-grid"></div></section>
     <section class="lower-grid"><article><span class="eyebrow">PREPARE BY USB</span><h2>MacBook installation workflow</h2><p>At home, download and vet each approved APK. Connect one headset at a time to the teacher’s MacBook with a data-capable USB-C cable; use SideQuest Advanced Installer, Meta Quest Developer Hub, or the included USB tool. Record its EDU apps in the headset card.</p><ol><li>Enable Developer Mode with IT approval and accept USB debugging in the headset.</li><li>Install the APK on the selected headset and launch it once.</li><li>Disconnect USB; the installed app runs standalone in class.</li></ol></article><article><span class="eyebrow">OPTIONAL HOTSPOT CAST</span><h2>Share one headset’s view</h2><p>USB installation is not USB casting. For Meta casting, connect the Quest and MacBook to the same phone hotspot, sign into the same Meta account and start casting inside Quest. The hotspot must allow connected devices to communicate; test one headset first. Casting requires network access and is not part of the offline lesson.</p><p class="muted">No school Wi‑Fi or Facebook access is required for the preinstalled offline app.</p></article></section>
+    <section class="program-callout"><div><span class="eyebrow">YEAR 7–8 PROGRAM</span><h2>Four-lesson VR investigation</h2><p>Teacher run sheets, five-headset rotations, iPad activities and locally autosaving worksheets for Roller Coaster and Beat Saber. Student work stays in this browser and is not sent to the AWS dashboard.</p></div><a class="button-link primary" href="/learn" target="_blank">Launch lessons</a></section>
     <section class="lower-grid"><article><span class="eyebrow">RECENT ACTIVITY</span><h2>Session log</h2><div id="events" class="events"><p class="muted">No activity recorded yet.</p></div></article><article><span class="eyebrow">LOCAL DATA</span><h2>Keep classroom records on the Mac</h2><p>Run this same dashboard at <b>localhost:3200</b> on the MacBook for use without school internet. The AWS site is an online copy, not an offline fallback. Transfer or sync records deliberately; they do not synchronise automatically.</p></article></section>
   </main>
   <dialog id="device-dialog"><form method="dialog"><button class="close" value="cancel" aria-label="Close">×</button><span class="eyebrow" id="dialog-model"></span><h2 id="dialog-title"></h2><label id="student-code-label">Student number (MacBook only)<input id="student-code" inputmode="numeric" pattern="[0-9]*" maxlength="12" placeholder="Digits from school email; not the email"></label><label>Learning activity<input id="activity" maxlength="100" placeholder="e.g. VR safety investigation"></label><label>Installed EDU apps / versions<textarea id="installed-apps" maxlength="500" rows="3" placeholder="e.g. Inside the PC 1.0"></textarea></label><label>Battery checked manually (%)<input id="battery" type="number" min="0" max="100" placeholder="Unknown"></label><label>Status<select id="status"><option value="ready">Ready</option><option value="active">In use</option><option value="attention">Needs attention</option><option value="charging">Charging</option></select></label><button id="save-device" class="primary" value="default">Save headset</button></form></dialog>
