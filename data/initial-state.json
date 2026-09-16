@@ -1,10 +1,10 @@
 {
   "devices": [
-    {"id":"VR-01","model":"Meta Quest 2","battery":null,"status":"ready","student":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
-    {"id":"VR-02","model":"Meta Quest 2","battery":null,"status":"ready","student":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
-    {"id":"VR-03","model":"Meta Quest 3","battery":null,"status":"ready","student":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
-    {"id":"VR-04","model":"Meta Quest 3S","battery":null,"status":"ready","student":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
-    {"id":"VR-05","model":"Meta Quest 3S","battery":null,"status":"ready","student":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null}
+    {"id":"VR-01","model":"Meta Quest 2","battery":null,"status":"ready","studentCode":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
+    {"id":"VR-02","model":"Meta Quest 2","battery":null,"status":"ready","studentCode":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
+    {"id":"VR-03","model":"Meta Quest 3","battery":null,"status":"ready","studentCode":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
+    {"id":"VR-04","model":"Meta Quest 3S","battery":null,"status":"ready","studentCode":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null},
+    {"id":"VR-05","model":"Meta Quest 3S","battery":null,"status":"ready","studentCode":"","activity":"Ready for allocation","installedApps":"","updatedAt":null,"lastSeen":null}
   ],
   "session":{"name":"Year 7/8 VR Investigation","active":false,"startedAt":null},
   "events":[]
