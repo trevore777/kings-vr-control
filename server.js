@@ -15,6 +15,7 @@ const port = Number(process.env.PORT || 3200);
 const hosted = process.env.NODE_ENV === 'production';
 const statePath = path.join(root, 'data', 'state.json');
 const initialPath = path.join(root, 'data', 'initial-state.json');
+const publicStudentFiles = new Set(['/learn', '/program.html', '/program.js', '/program.css', '/favicon.svg']);
 
 function loadState() {
   const source = fs.existsSync(statePath) ? statePath : initialPath;
@@ -149,8 +150,9 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method !== 'GET') return send(res, 404, {error:'Not found'});
-  if (!requireTeacher(req, res)) return;
-  const requested = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
+  const isStudentPage = publicStudentFiles.has(url.pathname);
+  if (!isStudentPage && !requireTeacher(req, res)) return;
+  const requested = url.pathname === '/' ? 'index.html' : url.pathname === '/learn' ? 'program.html' : url.pathname.slice(1);
   const file = path.join(root, 'public', requested);
   if (!file.startsWith(path.join(root, 'public')) || !fs.existsSync(file)) return send(res, 404, 'Not found', 'text/plain');
   const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml'};
