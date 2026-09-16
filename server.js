@@ -12,6 +12,7 @@ if (fs.existsSync(envPath)) {
   }
 }
 const port = Number(process.env.PORT || 3200);
+const hosted = process.env.NODE_ENV === 'production';
 const statePath = path.join(root, 'data', 'state.json');
 const initialPath = path.join(root, 'data', 'initial-state.json');
 
@@ -23,10 +24,27 @@ function loadState() {
     // Previous MVP seeded sample batteries. Do not present them as real readings.
     if (device.appVersion === 'Not connected' && device.lastSeen == null && device.battery === placeholderBatteries[device.id] && device.updatedAt == null) device.battery = null;
   }
+  if (hosted && state.devices.some(device => device.student !== undefined || device.studentCode !== undefined)) {
+    for (const device of state.devices) { delete device.student; delete device.studentCode; }
+    // The old activity log could contain student names. Retire it during migration.
+    state.events = [];
+    saveState(state);
+  } else if (!hosted) {
+    let changed = false;
+    for (const device of state.devices) {
+      if (device.student !== undefined) { delete device.student; changed = true; }
+      if (device.studentCode === undefined) { device.studentCode = ''; changed = true; }
+    }
+    // The old activity log could contain student names. Retire it during migration.
+    if (state.events.some(event => /\bfor\b/.test(event.message))) { state.events = []; changed = true; }
+    if (changed && fs.existsSync(statePath)) saveState(state);
+  }
+  state.hosted = hosted;
   return state;
 }
 
 function saveState(state) {
+  delete state.hosted;
   fs.writeFileSync(`${statePath}.tmp`, JSON.stringify(state, null, 2));
   fs.renameSync(`${statePath}.tmp`, statePath);
 }
@@ -94,7 +112,13 @@ const server = http.createServer(async (req, res) => {
     try {
       const update = await body(req); const state = loadState();
       const id = url.pathname.split('/').pop(); const device = state.devices.find(item => item.id === id);
-      for (const key of ['student','activity','installedApps']) if (update[key] !== undefined) device[key] = String(update[key]).slice(0, key === 'installedApps' ? 500 : 100);
+      if (update.student !== undefined) return send(res, 400, {error:'Names are not accepted'});
+      if (update.studentCode !== undefined) {
+        if (hosted) return send(res, 400, {error:'Student codes stay on the local Mac only'});
+        if (update.studentCode !== '' && !/^\d{1,12}$/.test(String(update.studentCode))) return send(res, 400, {error:'Enter digits only, not a name or email'});
+        device.studentCode = String(update.studentCode);
+      }
+      for (const key of ['activity','installedApps']) if (update[key] !== undefined) device[key] = String(update[key]).slice(0, key === 'installedApps' ? 500 : 100);
       if (update.status !== undefined) {
         if (!['ready','active','attention','charging'].includes(update.status)) return send(res, 400, {error:'Invalid status'});
         device.status = update.status;
@@ -106,7 +130,7 @@ const server = http.createServer(async (req, res) => {
         else return send(res, 400, {error:'Battery must be 0–100 or blank'});
       }
       if (update.installedApps !== undefined) device.updatedAt = new Date().toISOString();
-      addEvent(state, `${id} updated${device.student ? ` for ${device.student}` : ''}`); saveState(state);
+      addEvent(state, `${id} updated`); saveState(state);
       return send(res, 200, device);
     } catch (error) { return send(res, 400, {error:error.message}); }
   }
