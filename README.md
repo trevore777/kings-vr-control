@@ -6,7 +6,7 @@ Offline-first teacher dashboard for a five-headset Meta Quest classroom fleet. T
 
 - Tracks VR-01 through VR-05, manually checked battery and readiness.
 - Records installed EDU apps and versions on each headset.
-- Allocates students/groups and learning activities.
+- Allocates a numeric student code and learning activity in the offline MacBook copy only; AWS stores no student code or name.
 - Starts and ends a classroom VR session.
 - Provides an optional phone-hotspot casting hand-off.
 - Provides a Mac-side, explicit-serial ADB USB installation tool.
@@ -21,7 +21,7 @@ Copy `.env.example` to `.env`, set secure credentials, export the values, then r
 npm start
 ```
 
-The default address is `http://localhost:3200` and `/health` provides an AWS health check. On the teacher MacBook, the Node app and `data/state.json` work without school Wi-Fi or internet; the AWS site does not. No npm dependencies are required. Local Mac and AWS records do not sync automatically. Avoid putting identifiable student details on AWS without school approval.
+The default address is `http://localhost:3200` and `/health` provides an AWS health check. On the teacher MacBook, the Node app and `data/state.json` work without school Wi-Fi or internet; the AWS site does not. No npm dependencies are required. Local Mac and AWS records do not sync automatically. The student number is accepted only on the local MacBook: it must contain 1–12 digits, not an email address or name. Because an email-derived number can be matched to a student, treat the local file as school information and protect/back it up accordingly. In production (`NODE_ENV=production`) the AWS app rejects student numbers and names, removes legacy student fields and clears the old event log once when upgrading. Other free-text activity fields must remain generic—do not enter names there.
 
 ## Home preparation and school operation
 
