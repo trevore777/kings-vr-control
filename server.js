@@ -14,11 +14,16 @@ if (fs.existsSync(envPath)) {
 const port = Number(process.env.PORT || 3200);
 const statePath = path.join(root, 'data', 'state.json');
 const initialPath = path.join(root, 'data', 'initial-state.json');
-const publicStudentFiles = new Set(['/learn', '/program.html', '/program.js', '/program.css', '/favicon.svg']);
 
 function loadState() {
   const source = fs.existsSync(statePath) ? statePath : initialPath;
-  return JSON.parse(fs.readFileSync(source, 'utf8'));
+  const state = JSON.parse(fs.readFileSync(source, 'utf8'));
+  const placeholderBatteries = {'VR-01':82,'VR-02':76,'VR-03':91,'VR-04':88,'VR-05':84};
+  for (const device of state.devices) {
+    // Previous MVP seeded sample batteries. Do not present them as real readings.
+    if (device.appVersion === 'Not connected' && device.lastSeen == null && device.battery === placeholderBatteries[device.id] && device.updatedAt == null) device.battery = null;
+  }
+  return state;
 }
 
 function saveState(state) {
@@ -89,7 +94,18 @@ const server = http.createServer(async (req, res) => {
     try {
       const update = await body(req); const state = loadState();
       const id = url.pathname.split('/').pop(); const device = state.devices.find(item => item.id === id);
-      for (const key of ['student','activity','status','model']) if (update[key] !== undefined) device[key] = String(update[key]).slice(0, 100);
+      for (const key of ['student','activity','installedApps']) if (update[key] !== undefined) device[key] = String(update[key]).slice(0, key === 'installedApps' ? 500 : 100);
+      if (update.status !== undefined) {
+        if (!['ready','active','attention','charging'].includes(update.status)) return send(res, 400, {error:'Invalid status'});
+        device.status = update.status;
+      }
+      if (update.battery !== undefined) {
+        const battery = Number(update.battery);
+        if (update.battery === null || update.battery === '') device.battery = null;
+        else if (Number.isInteger(battery) && battery >= 0 && battery <= 100) device.battery = battery;
+        else return send(res, 400, {error:'Battery must be 0–100 or blank'});
+      }
+      if (update.installedApps !== undefined) device.updatedAt = new Date().toISOString();
       addEvent(state, `${id} updated${device.student ? ` for ${device.student}` : ''}`); saveState(state);
       return send(res, 200, device);
     } catch (error) { return send(res, 400, {error:error.message}); }
@@ -109,9 +125,8 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.method !== 'GET') return send(res, 404, {error:'Not found'});
-  const isStudentPage = publicStudentFiles.has(url.pathname);
-  if (!isStudentPage && !requireTeacher(req, res)) return;
-  const requested = url.pathname === '/' ? 'index.html' : url.pathname === '/learn' ? 'program.html' : url.pathname.slice(1);
+  if (!requireTeacher(req, res)) return;
+  const requested = url.pathname === '/' ? 'index.html' : url.pathname.slice(1);
   const file = path.join(root, 'public', requested);
   if (!file.startsWith(path.join(root, 'public')) || !fs.existsSync(file)) return send(res, 404, 'Not found', 'text/plain');
   const types = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.svg':'image/svg+xml'};
